@@ -38,9 +38,9 @@
     </div>
 
     <script>
-        // BAĞLANTI (Burada sadece BİR kez tanımlanıyor)
-        const _URL = "https://cyeklyjeszniowopawpc.supabase.co";
-        const _KEY = "sb_publishable_RUhk34F8aZiNcgIDIZAwCA_8ZATrGh0";
+        // BAĞLANTI (Güncel Proje Bilgileri)
+        const _URL = "https://ksevvntxdkuexulklmph.supabase.co";
+        const _KEY = "sb_publishable_9iHDw5_WEWyNnCz_wXIMuA_VPt36UTL";
         const supabaseClient = window.supabase.createClient(_URL, _KEY);
 
         const el = {
@@ -61,22 +61,30 @@
             if (!input) { alert("Nick girin!"); return; }
             
             el.error.style.display = "none";
+            el.wrapper.style.display = "none";
+
             try {
                 const { data, error } = await supabaseClient.rpc('search_player', { search_input: input });
+                
                 if (error || !data || data.length === 0) {
                     el.error.innerText = "Oyuncu bulunamadı!";
                     el.error.style.display = "block";
                     return;
                 }
+
                 const p = data[0];
+                
+                // Veritabanındaki gerçek sütun isimleriyle eşleştirme
                 el.nick.innerText = p.nick;
                 el.kd.innerText = (p.total_kills / (p.total_deaths || 1)).toFixed(2);
                 el.kills.innerText = p.total_kills;
                 el.deaths.innerText = p.total_deaths;
                 el.hs.innerText = `%${p.hs_percent}`;
                 el.dmg.innerText = p.total_damage.toLocaleString();
+                
                 el.wrapper.style.display = "flex";
             } catch (e) {
+                console.error(e);
                 el.error.innerText = "Sunucu hatası!";
                 el.error.style.display = "block";
             }
