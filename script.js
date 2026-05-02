@@ -1,8 +1,3 @@
-const SUPABASE_URL = "https://cyeklyjeszniowopawpc.supabase.co";
-const SUPABASE_KEY = "sb_publishable_RUhk34F8aZiNcgIDIZAwCA_8ZATrGh0";
-
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
 const el = {
     input: document.getElementById('nick-input'),
     error: document.getElementById('error-message'),
@@ -44,6 +39,7 @@ async function fetchPlayerStats() {
     el.input.disabled = true;
 
     try {
+        // 'supabase' değişkeni index.html içinden gelecek
         const { data, error } = await supabase.rpc('search_player', {
             search_input: input
         });
@@ -78,7 +74,7 @@ async function fetchPlayerStats() {
 
         el.wrapper.style.display = 'flex';
 
-    } catch {
+    } catch (err) {
         if (requestId === lastRequestId) {
             toggleError("Sunucu hatası.");
         }
