@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Şehrin Efendileri - Oyuncu Kartı</title>
 
+    <!-- Kütüphaneler -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
@@ -148,9 +149,6 @@
             id="nick-input" 
             placeholder="Oyuncu Nickini Girin..."
             autocomplete="off"
-            minlength="2"
-            maxlength="20"
-            pattern="[a-zA-Z0-9_]+"
             required
             onkeydown="if(event.key === 'Enter') fetchPlayerStats()"
         >
@@ -174,6 +172,14 @@
         <button type="button" class="download-btn" onclick="downloadCard()">Kartı İndir</button>
     </div>
 
+    <!-- Bağlantı Ayarları -->
+    <script>
+        const SUPABASE_URL = "https://cyeklyjeszniowopawpc.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_RUhk34F8aZiNcgIDIZAwCA_8ZATrGh0";
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    </script>
+    
+    <!-- Mantık Dosyası -->
     <script src="script.js"></script>
 </body>
 </html>
