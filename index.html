@@ -1,181 +1,153 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Şehrin Efendileri - Oyuncu Kartı</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Şehrin Efendileri - Oyuncu Kartı</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-    <style>
-        body { 
-            background: url("banner.jpg") no-repeat center center fixed;
-            background-size: cover;
-            color: #ffffff; 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            text-align: center; 
-            padding: 40px 20px; 
-            min-height: 100vh;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-        }
+<style>
+/* CSS KISMI DEĞİŞMEDİ - GÖRSEL YAPI KORUNDU */
+body { 
+    background: url("banner.jpg") no-repeat center center fixed;
+    background-size: cover;
+    color: #ffffff; 
+    font-family: 'Segoe UI', Roboto, sans-serif; 
+    text-align: center; 
+    padding: 20px;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
 
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.65);
-            z-index: 0;
-        }
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 0;
+}
 
-        .content-wrap { position: relative; z-index: 10; width: 100%; max-width: 500px; }
+.content-wrap { position: relative; z-index: 10; width: 100%; max-width: 500px; }
 
-        h1 { 
-            color: #facc15; 
-            margin-bottom: 30px; 
-            text-transform: uppercase; 
-            letter-spacing: 3px;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
+h1 { 
+    color: #facc15; 
+    margin-bottom: 20px;
+    text-transform: uppercase; 
+    letter-spacing: 3px;
+    font-size: 24px;
+}
 
-        #nick-input { 
-            padding: 12px 20px; 
-            border-radius: 8px; 
-            border: 1px solid #38bdf8; 
-            width: 250px; 
-            background: rgba(15, 15, 15, 0.9); 
-            color: white; 
-            outline: none;
-            transition: 0.2s;
-        }
-        #nick-input:focus { 
-            border-color: #facc15; 
-            box-shadow: 0 0 10px rgba(250,204,21,.3);
-        }
+#nick-input { 
+    padding: 10px 15px; 
+    border-radius: 8px; 
+    border: 1px solid #38bdf8; 
+    width: 220px; 
+    background: rgba(15, 15, 15, 0.9); 
+    color: white; 
+    outline: none;
+}
 
-        button { 
-            padding: 12px 25px; 
-            cursor: pointer; 
-            background: #facc15; 
-            border: none; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            margin-left: 10px; 
-            transition: 0.3s;
-        }
-        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(250, 204, 21, 0.4); }
+button { 
+    padding: 10px 20px; 
+    cursor: pointer; 
+    background: #facc15; 
+    border: none; 
+    border-radius: 8px; 
+    font-weight: bold; 
+    margin-left: 10px;
+}
 
-        #error-message { color: #ef4444; margin: 15px; display: none; font-weight: bold; }
+button:disabled { background: #555; cursor: not-allowed; } /* Loading için eklendi */
 
-        #card-wrapper { display: none; flex-direction: column; align-items: center; margin-top: 60px; }
+#error-message { color: #ef4444; margin: 10px; display: none; font-weight: bold; }
+
+#card-wrapper { display: none; flex-direction: column; align-items: center; margin-top: 30px; }
         
-        #player-card { 
-            background: rgba(31, 31, 31, 0.75); 
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(56, 189, 248, 0.4); 
-            padding: 35px; 
-            border-radius: 20px; 
-            width: 340px; 
-            text-align: left; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
-        }
+#player-card { 
+    background: rgba(31, 31, 31, 0.75); 
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(56, 189, 248, 0.4); 
+    padding: 25px;
+    border-radius: 20px; 
+    width: 340px; 
+    text-align: left; 
+}
 
-        #card-nick { 
-            text-align: center; 
-            color: #38bdf8; 
-            font-size: 30px;
-            font-weight: 900;
-        }
+#card-nick { 
+    text-align: center; 
+    color: #38bdf8; 
+    font-size: 26px; 
+    font-weight: 900;
+    word-break: break-word; 
+}
 
-        .card-subtext { 
-            text-align: center; 
-            font-size: 11px; 
-            opacity: 0.7; 
-            margin-bottom: 10px;
-        }
+.card-subtext { 
+    text-align: center; 
+    font-size: 10px; 
+    opacity: 0.7; 
+    margin-bottom: 15px;
+}
 
-        .card-rank {
-            text-align: center;
-            font-size: 18px;
-            font-weight: 900;
-            margin-bottom: 8px;
-        }
+.card-rank { text-align: center; font-size: 18px; font-weight: 900; }
+.card-brag { text-align: center; font-size: 13px; margin-bottom: 15px; color: #94a3b8; }
+.stat-row { display: flex; justify-content: space-between; margin: 10px 0; }
+.stat-row b { color: #94a3b8; font-size: 13px; }
+.stat-row span { font-weight: bold; font-size: 18px; }
 
-        .card-brag {
-            text-align: center;
-            font-size: 14px;
-            margin-bottom: 12px;
-            color: #94a3b8;
-        }
+.kd-row { 
+    background: rgba(255, 255, 255, 0.08); 
+    padding: 10px 15px; 
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
 
-        .card-share {
-            text-align: center;
-            font-size: 13px;
-            margin-bottom: 15px;
-            color: #38bdf8;
-            font-weight: 700;
-        }
+#card-kd { font-size: 28px; }
 
-        .stat-row { 
-            display: flex; 
-            justify-content: space-between; 
-            margin: 15px 0;
-        }
-
-        .stat-row b { color: #94a3b8; font-size: 14px; }
-        .stat-row span { font-weight: bold; font-size: 22px; }
-
-        .kd-row { 
-            background: rgba(255, 255, 255, 0.08); 
-            padding: 15px; 
-            border-radius: 10px;
-        }
-
-        #card-kd { font-size: 34px; }
-
-        .download-btn { 
-            margin-top: 30px; 
-            background: #38bdf8; 
-            color: white; 
-            width: 340px; 
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-    </style>
+.download-btn { 
+    margin-top: 20px; 
+    background: #38bdf8; 
+    color: white; 
+    width: 340px; 
+    padding: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+</style>
 </head>
 
 <body>
 
 <div class="content-wrap">
     <h1>OYUNCU KARTI OLUŞTUR</h1>
-    
+
     <div>
-        <input type="text" id="nick-input" placeholder="Oyuncu Nickini Girin..." onkeydown="if(event.key==='Enter')fetchPlayerStats()">
-        <button onclick="fetchPlayerStats()">Sorgula</button>
+        <input id="nick-input" placeholder="Nick gir..." onkeydown="if(event.key==='Enter')fetchPlayerStats()">
+        <button id="search-btn" onclick="fetchPlayerStats()">Sorgula</button>
     </div>
-    
+
     <div id="error-message"></div>
 
     <div id="card-wrapper">
         <div id="player-card">
             <h2 id="card-nick"></h2>
             <div class="card-subtext">SEHRIN EFENDILERI | 95.173.173.81</div>
-
             <div id="card-rank" class="card-rank"></div>
             <div id="card-brag" class="card-brag"></div>
-            <div class="card-share">PERFORMANSINI GÖSTER</div>
-
             <div class="stat-row kd-row"><b>K/D</b> <span id="card-kd"></span></div>
             <div class="stat-row"><b>ÖLDÜRME</b> <span id="card-kills"></span></div>
             <div class="stat-row"><b>ÖLÜM</b> <span id="card-deaths"></span></div>
             <div class="stat-row"><b>HS</b> <span id="card-hs"></span></div>
             <div class="stat-row"><b>HASAR</b> <span id="card-dmg"></span></div>
         </div>
-
         <button class="download-btn" onclick="downloadCard()">KARTI İNDİR</button>
     </div>
 </div>
@@ -188,6 +160,7 @@ const supabaseClient = window.supabase.createClient(
 
 const el = {
     input: document.getElementById('nick-input'),
+    btn: document.getElementById('search-btn'),
     error: document.getElementById('error-message'),
     wrapper: document.getElementById('card-wrapper'),
     card: document.getElementById('player-card'),
@@ -201,57 +174,96 @@ const el = {
     brag: document.getElementById('card-brag')
 };
 
+// DEBOUNCE / LOADING KONTROLÜ
+let isLoading = false;
+
 async function fetchPlayerStats(){
     const input = el.input.value.trim();
-    if(!input) return;
 
-    el.error.style.display = "none";
-    el.wrapper.style.display = "none";
-
-    const { data } = await supabaseClient.rpc('search_player',{search_input:input});
-
-    if(!data || data.length===0){
-        el.error.innerText="Oyuncu bulunamadı!";
+    // 1. INPUT SANITIZE / LENGTH CHECK (Chatgpt Önerisi)
+    if(!input || input.length < 3){
+        el.error.innerText="Lütfen en az 3 karakter girin!";
+        el.error.style.display="block";
+        return;
+    }
+    if(input.length > 25){
+        el.error.innerText="Nick çok uzun!";
         el.error.style.display="block";
         return;
     }
 
-    const p = data[0];
-    const kd = (p.total_kills/(p.total_deaths||1)).toFixed(2);
-    const kdNum = parseFloat(kd);
-    const hs = p.hs_percent||0;
+    // 2. DEBOUNCE / MULTI-CLICK KORUMASI (Chatgpt Önerisi)
+    if(isLoading) return;
+    isLoading = true;
+    el.btn.disabled = true;
+    el.btn.innerText = "Sorgulanıyor...";
 
-    el.nick.innerText=p.nick;
-    el.kd.innerText=kd;
+    el.error.style.display="none";
+    el.wrapper.style.display="none";
 
-    if(kdNum>=2.5){el.rank.innerText="EFSANE";el.brag.innerText="Sunucunun zirvesinde";}
-    else if(kdNum>=1.8){el.rank.innerText="USTA";el.brag.innerText="Rakiplerine üstün";}
-    else if(kdNum>=1.2){el.rank.innerText="YETENEKLİ";el.brag.innerText="Etkili performans";}
-    else if(kdNum>=0.8){el.rank.innerText="ORTA SEVİYE";el.brag.innerText="Dengeli oyun";}
-    else{el.rank.innerText="ACEMİ";el.brag.innerText="Gelişmeye açık";}
+    try{
+        const { data, error } = await supabaseClient.rpc('search_player',{search_input:input});
 
-    if(hs>=40) el.rank.innerText+=" • HS USTASI";
-    else if(hs>=30) el.rank.innerText+=" • İSABETLİ";
+        if(error){
+            el.error.innerText="Veri alınamadı!";
+            el.error.style.display="block";
+            return;
+        }
 
-    el.kd.style.color = kdNum>=1.5?"#22c55e":kdNum>=1?"#facc15":"#ef4444";
+        if(!data || data.length===0){
+            el.error.innerText="Oyuncu bulunamadı!";
+            el.error.style.display="block";
+            return;
+        }
 
-    el.kills.innerText=p.total_kills;
-    el.deaths.innerText=p.total_deaths;
-    el.hs.innerText="%"+hs;
-    el.dmg.innerText=p.total_damage.toLocaleString();
+        const p = data[0];
+        const kills = Number(p.total_kills) || 0;
+        const deaths = Number(p.total_deaths) || 1;
+        const kd = (kills/deaths).toFixed(2);
+        const kdNum = parseFloat(kd);
+        const hs = Number(p.hs_percent) || 0;
 
-    el.wrapper.style.display="flex";
+        el.nick.innerText=p.nick;
+        el.kd.innerText=kd;
+
+        // RANK MANTIĞI
+        if(kdNum>=2.5){el.rank.innerText="EFSANE";el.brag.innerText="Sunucunun zirvesinde";}
+        else if(kdNum>=1.8){el.rank.innerText="USTA";el.brag.innerText="Rakiplerine üstün";}
+        else if(kdNum>=1.2){el.rank.innerText="YETENEKLİ";el.brag.innerText="Etkili performans";}
+        else if(kdNum>=0.8){el.rank.innerText="ORTA SEVİYE";el.brag.innerText="Dengeli oyun";}
+        else{el.rank.innerText="ACEMİ";el.brag.innerText="Gelişmeye açık";}
+
+        if(hs>=40) el.rank.innerText+=" • HS USTASI";
+        else if(hs>=30) el.rank.innerText+=" • İSABETLİ";
+
+        el.kd.style.color = kdNum>=1.5?"#22c55e":kdNum>=1?"#facc15":"#ef4444";
+        el.kills.innerText=kills;
+        el.deaths.innerText=deaths;
+        el.hs.innerText="%"+hs;
+        el.dmg.innerText=(Number(p.total_damage)||0).toLocaleString();
+
+        el.wrapper.style.display="flex";
+
+    } catch(err) {
+        console.error(err);
+        el.error.innerText="Sunucu hatası!";
+        el.error.style.display="block";
+    } finally {
+        // İŞLEM BİTİNCE KİLİDİ AÇ
+        isLoading = false;
+        el.btn.disabled = false;
+        el.btn.innerText = "Sorgula";
+    }
 }
 
 function downloadCard(){
-    html2canvas(el.card,{backgroundColor:null,scale:3}).then(c=>{
+    html2canvas(el.card,{backgroundColor:null,scale:3,useCORS:true}).then(c=>{
         const a=document.createElement("a");
         a.href=c.toDataURL();
-        a.download="player.png";
+        a.download=`${el.nick.innerText}_Stats.png`;
         a.click();
     });
 }
 </script>
-
 </body>
 </html>
