@@ -9,7 +9,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <style>
-/* CSS KISMI DEĞİŞMEDİ - GÖRSEL YAPI KORUNDU */
+/* 1 & 2. ODAK VE DERİNLİK (Premium Atmosfer) */
 body { 
     background: url("banner.jpg") no-repeat center center fixed;
     background-size: cover;
@@ -22,104 +22,174 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: relative;
+    overflow-x: hidden;
 }
 
+/* Arka planı tamamen karartıp flulaştırarak karta odaklıyoruz */
 body::before {
     content: "";
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.65);
+    background: rgba(0, 0, 0, 0.85); 
+    backdrop-filter: blur(10px); 
     z-index: 0;
 }
 
 .content-wrap { position: relative; z-index: 10; width: 100%; max-width: 500px; }
 
+/* Başlık geri plana atılarak odak karta çekildi */
 h1 { 
-    color: #facc15; 
-    margin-bottom: 20px;
+    color: rgba(250, 204, 21, 0.4); 
+    margin-bottom: 40px;
     text-transform: uppercase; 
-    letter-spacing: 3px;
-    font-size: 24px;
+    letter-spacing: 6px;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+/* Arama Alanı (Kompakt ve Fonksiyonel) */
+.search-box {
+    margin-bottom: 60px;
+    display: flex;
+    justify-content: center;
 }
 
 #nick-input { 
-    padding: 10px 15px; 
-    border-radius: 8px; 
-    border: 1px solid #38bdf8; 
-    width: 220px; 
-    background: rgba(15, 15, 15, 0.9); 
+    padding: 12px 20px; 
+    border-radius: 12px 0 0 12px; 
+    border: 1px solid rgba(56, 189, 248, 0.3); 
+    width: 200px; 
+    background: rgba(15, 15, 15, 0.7); 
     color: white; 
     outline: none;
+    font-size: 14px;
 }
 
-button { 
-    padding: 10px 20px; 
+#search-btn { 
+    padding: 12px 25px; 
     cursor: pointer; 
     background: #facc15; 
     border: none; 
-    border-radius: 8px; 
-    font-weight: bold; 
-    margin-left: 10px;
+    border-radius: 0 12px 12px 0; 
+    font-weight: 800; 
+    color: #000;
+    transition: 0.3s;
 }
 
-button:disabled { background: #555; cursor: not-allowed; } /* Loading için eklendi */
+#search-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-#error-message { color: #ef4444; margin: 10px; display: none; font-weight: bold; }
+#error-message { color: #ef4444; margin-bottom: 20px; display: none; font-weight: bold; font-size: 14px; }
 
-#card-wrapper { display: none; flex-direction: column; align-items: center; margin-top: 30px; }
-        
+/* 3. KART TASARIMI (Ürün Hissi ve Wow Etkisi) */
+#card-wrapper { 
+    display: none; 
+    flex-direction: column; 
+    align-items: center; 
+    animation: cardEntry 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+@keyframes cardEntry {
+    from { opacity: 0; transform: scale(0.9) translateY(40px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
 #player-card { 
-    background: rgba(31, 31, 31, 0.75); 
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(56, 189, 248, 0.4); 
-    padding: 25px;
-    border-radius: 20px; 
-    width: 340px; 
+    background: linear-gradient(145deg, #1a1a1a, #0d0d0d); 
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(250, 204, 21, 0.2); 
+    padding: 45px 35px; 
+    border-radius: 35px; 
+    width: 360px; 
     text-align: left; 
+    box-shadow: 0 40px 100px rgba(0,0,0,0.9), 0 0 30px rgba(250, 204, 21, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Kartın üst kısmına profesyonel bir parıltı */
+#player-card::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(225deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 50%);
+    pointer-events: none;
 }
 
 #card-nick { 
     text-align: center; 
     color: #38bdf8; 
-    font-size: 26px; 
+    font-size: 32px; 
     font-weight: 900;
-    word-break: break-word; 
+    margin: 0;
+    text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
 }
 
 .card-subtext { 
     text-align: center; 
-    font-size: 10px; 
-    opacity: 0.7; 
-    margin-bottom: 15px;
+    font-size: 11px; 
+    opacity: 0.5; 
+    margin-bottom: 25px;
+    letter-spacing: 2px;
 }
 
-.card-rank { text-align: center; font-size: 18px; font-weight: 900; }
-.card-brag { text-align: center; font-size: 13px; margin-bottom: 15px; color: #94a3b8; }
-.stat-row { display: flex; justify-content: space-between; margin: 10px 0; }
-.stat-row b { color: #94a3b8; font-size: 13px; }
-.stat-row span { font-weight: bold; font-size: 18px; }
-
-.kd-row { 
-    background: rgba(255, 255, 255, 0.08); 
-    padding: 10px 15px; 
-    border-radius: 10px;
-    margin-bottom: 15px;
+.card-rank { 
+    text-align: center; 
+    font-size: 18px; 
+    font-weight: 900; 
+    color: #fff;
+    margin-bottom: 5px;
 }
 
-#card-kd { font-size: 28px; }
+.card-brag { 
+    text-align: center; 
+    font-size: 13px; 
+    margin-bottom: 35px; 
+    color: #94a3b8; 
+}
 
+/* 4. K/D VURGUSU (Büyük ve Dominant) */
+.kd-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 25px;
+    padding: 25px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.kd-label { font-size: 10px; color: #64748b; font-weight: 900; letter-spacing: 2px; margin-bottom: 10px; display: block;}
+#card-kd { font-size: 54px; font-weight: 900; display: block; line-height: 1; }
+
+.stat-row { 
+    display: flex; 
+    justify-content: space-between; 
+    margin: 15px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    padding-bottom: 8px;
+}
+.stat-row b { color: #475569; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+.stat-row span { font-weight: 800; font-size: 18px; color: #f8fafc; }
+
+/* 5. BUTON (Parlak ve "Bas Beni" Diyen CTA) */
 .download-btn { 
-    margin-top: 20px; 
-    background: #38bdf8; 
+    margin-top: 45px; 
+    background: linear-gradient(90deg, #38bdf8, #0284c7);
     color: white; 
-    width: 340px; 
-    padding: 12px;
-    font-weight: 800;
+    width: 360px; 
+    padding: 18px;
+    font-weight: 900;
     text-transform: uppercase;
     border: none;
-    border-radius: 8px;
+    border-radius: 18px;
     cursor: pointer;
+    box-shadow: 0 15px 30px rgba(2, 132, 199, 0.3);
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    letter-spacing: 2px;
+}
+
+.download-btn:hover { 
+    transform: scale(1.03) translateY(-5px); 
+    box-shadow: 0 20px 40px rgba(2, 132, 199, 0.5); 
 }
 </style>
 </head>
@@ -127,10 +197,10 @@ button:disabled { background: #555; cursor: not-allowed; } /* Loading için ekle
 <body>
 
 <div class="content-wrap">
-    <h1>OYUNCU KARTI OLUŞTUR</h1>
+    <h1>Kayıtlı Oyuncu Veritabanı</h1>
 
-    <div>
-        <input id="nick-input" placeholder="Nick gir..." onkeydown="if(event.key==='Enter')fetchPlayerStats()">
+    <div class="search-box">
+        <input id="nick-input" placeholder="Nickinizi giriniz..." onkeydown="if(event.key==='Enter')fetchPlayerStats()">
         <button id="search-btn" onclick="fetchPlayerStats()">Sorgula</button>
     </div>
 
@@ -139,20 +209,28 @@ button:disabled { background: #555; cursor: not-allowed; } /* Loading için ekle
     <div id="card-wrapper">
         <div id="player-card">
             <h2 id="card-nick"></h2>
-            <div class="card-subtext">SEHRIN EFENDILERI | 95.173.173.81</div>
+            <div class="card-subtext">SEHRIN EFENDILERI | CS 1.6 GLOBAL STATS</div>
+
             <div id="card-rank" class="card-rank"></div>
             <div id="card-brag" class="card-brag"></div>
-            <div class="stat-row kd-row"><b>K/D</b> <span id="card-kd"></span></div>
-            <div class="stat-row"><b>ÖLDÜRME</b> <span id="card-kills"></span></div>
-            <div class="stat-row"><b>ÖLÜM</b> <span id="card-deaths"></span></div>
-            <div class="stat-row"><b>HS</b> <span id="card-hs"></span></div>
-            <div class="stat-row"><b>HASAR</b> <span id="card-dmg"></span></div>
+
+            <div class="kd-box">
+                <span class="kd-label">PERFORMANS SKORU (K/D)</span>
+                <span id="card-kd">0.00</span>
+            </div>
+
+            <div class="stat-row"><b>TOPLAM LEŞ</b> <span id="card-kills">0</span></div>
+            <div class="stat-row"><b>TOPLAM ÖLÜM</b> <span id="card-deaths">0</span></div>
+            <div class="stat-row"><b>KAFA VURUŞU</b> <span id="card-hs">%0</span></div>
+            <div class="stat-row"><b>HASAR GÜCÜ</b> <span id="card-dmg">0</span></div>
         </div>
-        <button class="download-btn" onclick="downloadCard()">KARTI İNDİR</button>
+
+        <button class="download-btn" onclick="downloadCard()">KARTI OLUŞTUR VE İNDİR</button>
     </div>
 </div>
 
 <script>
+/* SİZİN GÜVENLİ VE ÇALIŞAN SUPABASE MANTIĞINIZ */
 const supabaseClient = window.supabase.createClient(
     "https://ksevvntxdkuexulklmph.supabase.co",
     "sb_publishable_9iHDw5_WEWyNnCz_wXIMuA_VPt36UTL"
@@ -174,82 +252,61 @@ const el = {
     brag: document.getElementById('card-brag')
 };
 
-// DEBOUNCE / LOADING KONTROLÜ
 let isLoading = false;
 
 async function fetchPlayerStats(){
     const input = el.input.value.trim();
-
-    // 1. INPUT SANITIZE / LENGTH CHECK (Chatgpt Önerisi)
-    if(!input || input.length < 3){
-        el.error.innerText="Lütfen en az 3 karakter girin!";
-        el.error.style.display="block";
+    if(!input || input.length < 3) {
+        el.error.innerText = "Lütfen en az 3 karakter girin.";
+        el.error.style.display = "block";
         return;
     }
-    if(input.length > 25){
-        el.error.innerText="Nick çok uzun!";
-        el.error.style.display="block";
-        return;
-    }
-
-    // 2. DEBOUNCE / MULTI-CLICK KORUMASI (Chatgpt Önerisi)
+    
     if(isLoading) return;
     isLoading = true;
     el.btn.disabled = true;
-    el.btn.innerText = "Sorgulanıyor...";
+    el.btn.innerText = "...";
+    el.error.style.display = "none";
+    el.wrapper.style.display = "none";
 
-    el.error.style.display="none";
-    el.wrapper.style.display="none";
-
-    try{
+    try {
         const { data, error } = await supabaseClient.rpc('search_player',{search_input:input});
 
-        if(error){
-            el.error.innerText="Veri alınamadı!";
-            el.error.style.display="block";
-            return;
-        }
-
-        if(!data || data.length===0){
-            el.error.innerText="Oyuncu bulunamadı!";
-            el.error.style.display="block";
+        if(error || !data || data.length === 0){
+            el.error.innerText = "Oyuncu bulunamadı!";
+            el.error.style.display = "block";
             return;
         }
 
         const p = data[0];
         const kills = Number(p.total_kills) || 0;
         const deaths = Number(p.total_deaths) || 1;
-        const kd = (kills/deaths).toFixed(2);
-        const kdNum = parseFloat(kd);
-        const hs = Number(p.hs_percent) || 0;
+        const kdVal = (kills/deaths).toFixed(2);
+        const hs = p.hs_percent || 0;
 
-        el.nick.innerText=p.nick;
-        el.kd.innerText=kd;
+        el.nick.innerText = p.nick;
+        el.kd.innerText = kdVal;
+        
+        // Dinamik Renkler
+        el.kd.style.color = parseFloat(kdVal) >= 1.5 ? "#22c55e" : parseFloat(kdVal) >= 1 ? "#facc15" : "#ef4444";
 
-        // RANK MANTIĞI
-        if(kdNum>=2.5){el.rank.innerText="EFSANE";el.brag.innerText="Sunucunun zirvesinde";}
-        else if(kdNum>=1.8){el.rank.innerText="USTA";el.brag.innerText="Rakiplerine üstün";}
-        else if(kdNum>=1.2){el.rank.innerText="YETENEKLİ";el.brag.innerText="Etkili performans";}
-        else if(kdNum>=0.8){el.rank.innerText="ORTA SEVİYE";el.brag.innerText="Dengeli oyun";}
-        else{el.rank.innerText="ACEMİ";el.brag.innerText="Gelişmeye açık";}
+        // Rank Atamaları
+        if(parseFloat(kdVal) >= 2.5) { el.rank.innerText = "EFSANE"; el.brag.innerText = "Sunucunun tek hakimi."; }
+        else if(parseFloat(kdVal) >= 1.8) { el.rank.innerText = "USTA"; el.brag.innerText = "Rakiplerin korkulu rüyası."; }
+        else if(parseFloat(kdVal) >= 1.2) { el.rank.innerText = "YETENEKLİ"; el.brag.innerText = "Savaş alanında fark yaratıyor."; }
+        else { el.rank.innerText = "ACEMİ"; el.brag.innerText = "Gelişmeye devam ediyor."; }
 
-        if(hs>=40) el.rank.innerText+=" • HS USTASI";
-        else if(hs>=30) el.rank.innerText+=" • İSABETLİ";
+        el.kills.innerText = kills.toLocaleString();
+        el.deaths.innerText = deaths.toLocaleString();
+        el.hs.innerText = `%${hs}`;
+        el.dmg.innerText = (Number(p.total_damage) || 0).toLocaleString();
 
-        el.kd.style.color = kdNum>=1.5?"#22c55e":kdNum>=1?"#facc15":"#ef4444";
-        el.kills.innerText=kills;
-        el.deaths.innerText=deaths;
-        el.hs.innerText="%"+hs;
-        el.dmg.innerText=(Number(p.total_damage)||0).toLocaleString();
-
-        el.wrapper.style.display="flex";
+        el.wrapper.style.display = "flex";
 
     } catch(err) {
-        console.error(err);
-        el.error.innerText="Sunucu hatası!";
-        el.error.style.display="block";
+        el.error.innerText = "Sunucu bağlantı hatası.";
+        el.error.style.display = "block";
     } finally {
-        // İŞLEM BİTİNCE KİLİDİ AÇ
         isLoading = false;
         el.btn.disabled = false;
         el.btn.innerText = "Sorgula";
@@ -258,9 +315,9 @@ async function fetchPlayerStats(){
 
 function downloadCard(){
     html2canvas(el.card,{backgroundColor:null,scale:3,useCORS:true}).then(c=>{
-        const a=document.createElement("a");
-        a.href=c.toDataURL();
-        a.download=`${el.nick.innerText}_Stats.png`;
+        const a = document.createElement("a");
+        a.href = c.toDataURL("image/png");
+        a.download = `${el.nick.innerText}_EFENDI_CARD.png`;
         a.click();
     });
 }
