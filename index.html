@@ -5,10 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Şehrin Efendileri - Oyuncu Kartı</title>
 
+<!-- Harici Kütüphaneler -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <style>
+/* 1 & 2. ODAK VE DERİNLİK */
 body { 
     background: url("banner.jpg") no-repeat center center fixed;
     background-size: cover;
@@ -21,6 +23,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-x: hidden;
 }
 
 body::before {
@@ -42,7 +45,12 @@ h1 {
     font-size: 20px;
 }
 
-.search-box { margin-bottom: 30px; display: flex; justify-content: center; }
+/* Arama Alanı */
+.search-box {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+}
 
 #nick-input { 
     padding: 12px; 
@@ -52,6 +60,7 @@ h1 {
     background: rgba(15, 15, 15, 0.9); 
     color: white; 
     outline: none;
+    font-size: 14px;
 }
 
 #search-btn { 
@@ -61,6 +70,8 @@ h1 {
     border: none; 
     border-radius: 0 8px 8px 0; 
     font-weight: 800; 
+    color: #000;
+    transition: 0.3s;
 }
 
 /* RANK TEMALARI */
@@ -79,7 +90,7 @@ h1 {
 #player-card { 
     background: linear-gradient(160deg, #151515, #0a0a0a); 
     border: 2px solid rgba(255, 255, 255, 0.1); 
-    padding: 25px; /* Dikey daraltma yapıldı */
+    padding: 25px; 
     border-radius: 25px; 
     width: 340px; 
     text-align: left; 
@@ -94,7 +105,7 @@ h1 {
 /* SUNUCU VE IP VURGUSU */
 .card-server-info {
     text-align: center;
-    color: #facc15; /* Sönük değil, canlı sarı */
+    color: #facc15; 
     font-size: 11px;
     font-weight: 800;
     margin: 5px 0 15px 0;
@@ -113,7 +124,7 @@ h1 {
 .stat-row span { font-weight: 800; font-size: 16px; }
 
 .download-btn { 
-    margin-top: 15px; /* Boşluk azaltıldı */
+    margin-top: 15px; 
     background: #38bdf8;
     color: white; 
     width: 340px; 
@@ -243,10 +254,11 @@ async function fetchPlayerStats(){
 
         el.kd.style.color = kdVal >= 1.5 ? "#22c55e" : kdVal >= 1 ? "#facc15" : "#ef4444";
 
-        if(kdVal >= 2.5) { el.rank.innerText = "EFSANE"; el.brag.innerText = "Sunucunun kralı!"; }
-        else if(kdVal >= 1.8) { el.rank.innerText = "USTA"; el.brag.innerText = "Rakiplerin korkulu rüyası."; }
-        else if(kdVal >= 1.2) { el.rank.innerText = "YETENEKLİ"; el.brag.innerText = "Savaş alanında etkili."; }
-        else { el.rank.innerText = "ACEMİ"; el.brag.innerText = "Gelişmeye devam ediyor."; }
+        // YENİ RÜTBE VE AÇIKLAMA TANIMLARI
+        if(kdVal >= 2.5) { el.rank.innerText = "EFSANE"; el.brag.innerText = "Oyuna yön veriyor."; }
+        else if(kdVal >= 1.8) { el.rank.innerText = "USTA"; el.brag.innerText = "Kontrolü elinde tutuyor."; }
+        else if(kdVal >= 1.2) { el.rank.innerText = "YETENEKLİ"; el.brag.innerText = "Dengeli performans."; }
+        else { el.rank.innerText = "ACEMİ"; el.brag.innerText = "Başlangıç seviyesinde."; }
 
         el.wrapper.style.display = "flex";
 
