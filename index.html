@@ -76,96 +76,72 @@
         #player-card { 
             background: rgba(31, 31, 31, 0.75); 
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(56, 189, 248, 0.4); 
             padding: 35px; 
             border-radius: 20px; 
             width: 340px; 
             text-align: left; 
             box-shadow: 0 20px 50px rgba(0,0,0,0.7);
-            position: relative;
-            overflow: hidden;
-        }
-
-        #player-card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 4px;
-            background: #38bdf8;
         }
 
         #card-nick { 
             text-align: center; 
             color: #38bdf8; 
-            font-size: 24px; 
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 30px;
             font-weight: 900;
         }
 
         .card-subtext { 
             text-align: center; 
-            font-size: 10px; 
-            color: #ffffff; 
+            font-size: 11px; 
             opacity: 0.7; 
-            margin-bottom: 10px; 
-            letter-spacing: 1px; 
-            font-weight: 600;
+            margin-bottom: 10px;
         }
 
         .card-rank {
             text-align: center;
-            font-size: 13px;
-            font-weight: 800;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
+            font-size: 18px;
+            font-weight: 900;
+            margin-bottom: 8px;
         }
 
         .card-brag {
             text-align: center;
-            font-size: 11px;
-            margin-bottom: 15px;
+            font-size: 14px;
+            margin-bottom: 12px;
             color: #94a3b8;
-            letter-spacing: 1px;
         }
 
         .card-share {
             text-align: center;
-            font-size: 11px;
+            font-size: 13px;
             margin-bottom: 15px;
             color: #38bdf8;
-            letter-spacing: 1px;
             font-weight: 700;
         }
 
         .stat-row { 
             display: flex; 
             justify-content: space-between; 
-            margin: 15px 0; 
-            font-size: 16px; 
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 8px;
+            margin: 15px 0;
         }
 
-        .stat-row b { color: #94a3b8; font-size: 12px; }
-        .stat-row span { font-weight: bold; font-size: 18px; }
+        .stat-row b { color: #94a3b8; font-size: 14px; }
+        .stat-row span { font-weight: bold; font-size: 22px; }
 
         .kd-row { 
-            background: rgba(255, 255, 255, 0.03); 
-            padding: 12px; 
-            border-radius: 10px; 
-            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.08); 
+            padding: 15px; 
+            border-radius: 10px;
         }
 
-        #card-kd { font-size: 28px; }
+        #card-kd { font-size: 34px; }
 
         .download-btn { 
             margin-top: 30px; 
             background: #38bdf8; 
             color: white; 
             width: 340px; 
-            margin-left: 0; 
             font-weight: 800;
             text-transform: uppercase;
         }
@@ -191,16 +167,16 @@
 
             <div id="card-rank" class="card-rank"></div>
             <div id="card-brag" class="card-brag"></div>
-            <div class="card-share">PAYLAŞ & RAKİPLERİNİ EZ 🔥</div>
+            <div class="card-share">PERFORMANSINI GÖSTER</div>
 
             <div class="stat-row kd-row"><b>K/D</b> <span id="card-kd"></span></div>
-            <div class="stat-row"><b>KILL</b> <span id="card-kills"></span></div>
-            <div class="stat-row"><b>DEATH</b> <span id="card-deaths"></span></div>
+            <div class="stat-row"><b>ÖLDÜRME</b> <span id="card-kills"></span></div>
+            <div class="stat-row"><b>ÖLÜM</b> <span id="card-deaths"></span></div>
             <div class="stat-row"><b>HS</b> <span id="card-hs"></span></div>
-            <div class="stat-row"><b>DMG</b> <span id="card-dmg"></span></div>
+            <div class="stat-row"><b>HASAR</b> <span id="card-dmg"></span></div>
         </div>
 
-        <button class="download-btn" onclick="downloadCard()">KARTI İNDİR & PAYLAŞ</button>
+        <button class="download-btn" onclick="downloadCard()">KARTI İNDİR</button>
     </div>
 </div>
 
@@ -248,14 +224,14 @@ async function fetchPlayerStats(){
     el.nick.innerText=p.nick;
     el.kd.innerText=kd;
 
-    if(kdNum>=2.5){el.rank.innerText="LEGEND";el.brag.innerText="SUNUCUYU EZİYOR";}
-    else if(kdNum>=1.8){el.rank.innerText="ELITE";el.brag.innerText="RAKİPLERİ DOMİNE EDİYOR";}
-    else if(kdNum>=1.2){el.rank.innerText="SKILLED";el.brag.innerText="GÜÇLÜ PERFORMANS";}
-    else if(kdNum>=0.8){el.rank.innerText="AVERAGE";el.brag.innerText="ORTA SEVİYE";}
-    else{el.rank.innerText="NOOB";el.brag.innerText="GELİŞİYOR";}
+    if(kdNum>=2.5){el.rank.innerText="EFSANE";el.brag.innerText="Sunucunun zirvesinde";}
+    else if(kdNum>=1.8){el.rank.innerText="USTA";el.brag.innerText="Rakiplerine üstün";}
+    else if(kdNum>=1.2){el.rank.innerText="YETENEKLİ";el.brag.innerText="Etkili performans";}
+    else if(kdNum>=0.8){el.rank.innerText="ORTA SEVİYE";el.brag.innerText="Dengeli oyun";}
+    else{el.rank.innerText="ACEMİ";el.brag.innerText="Gelişmeye açık";}
 
-    if(hs>=40) el.rank.innerText+=" • HS GOD";
-    else if(hs>=30) el.rank.innerText+=" • SHARPSHOOTER";
+    if(hs>=40) el.rank.innerText+=" • HS USTASI";
+    else if(hs>=30) el.rank.innerText+=" • İSABETLİ";
 
     el.kd.style.color = kdNum>=1.5?"#22c55e":kdNum>=1?"#facc15":"#ef4444";
 
