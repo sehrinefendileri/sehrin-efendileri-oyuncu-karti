@@ -30,19 +30,19 @@ body::before {
     content: "";
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.85); 
-    backdrop-filter: blur(10px); 
+    background: rgba(0, 0, 0, 0.88); 
+    backdrop-filter: blur(12px); 
     z-index: 0;
 }
 
 .content-wrap { position: relative; z-index: 10; width: 100%; max-width: 500px; }
 
 h1 { 
-    color: rgba(250, 204, 21, 0.4); 
+    color: rgba(250, 204, 21, 0.3); 
     margin-bottom: 40px;
     text-transform: uppercase; 
-    letter-spacing: 6px;
-    font-size: 16px;
+    letter-spacing: 8px;
+    font-size: 14px;
     font-weight: 300;
 }
 
@@ -56,9 +56,9 @@ h1 {
 #nick-input { 
     padding: 12px 20px; 
     border-radius: 12px 0 0 12px; 
-    border: 1px solid rgba(56, 189, 248, 0.3); 
+    border: 1px solid rgba(56, 189, 248, 0.2); 
     width: 200px; 
-    background: rgba(15, 15, 15, 0.7); 
+    background: rgba(15, 15, 15, 0.8); 
     color: white; 
     outline: none;
     font-size: 14px;
@@ -75,117 +75,176 @@ h1 {
     transition: 0.3s;
 }
 
-#search-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-/* RANK TEMALARI (Dinamik Efektler) */
-.theme-acemi { border-color: #64748b !important; box-shadow: 0 0 20px rgba(100, 116, 139, 0.2) !important; }
-.theme-yetenekli { border-color: #38bdf8 !important; box-shadow: 0 0 30px rgba(56, 189, 248, 0.3) !important; }
-.theme-usta { border-color: #facc15 !important; box-shadow: 0 0 40px rgba(250, 204, 21, 0.4) !important; }
-.theme-efsane { border-color: #ef4444 !important; box-shadow: 0 0 50px rgba(239, 68, 68, 0.5) !important; animation: efsaneGlow 2s infinite alternate; }
+/* RANK TEMALARI VE STATÜ EFEKTLERİ */
+.theme-acemi { border-color: #475569 !important; box-shadow: 0 0 30px rgba(71, 85, 105, 0.2) !important; }
+.theme-yetenekli { border-color: #0284c7 !important; box-shadow: 0 0 40px rgba(2, 132, 199, 0.3) !important; }
+.theme-usta { border-color: #ca8a04 !important; box-shadow: 0 0 50px rgba(202, 138, 4, 0.4) !important; }
+.theme-efsane { border-color: #dc2626 !important; box-shadow: 0 0 60px rgba(220, 38, 38, 0.5) !important; animation: efsaneGlow 2s infinite alternate; }
 
 @keyframes efsaneGlow {
-    from { box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
-    to { box-shadow: 0 0 60px rgba(239, 68, 68, 0.7); }
+    from { box-shadow: 0 0 20px rgba(220, 38, 38, 0.4); }
+    to { box-shadow: 0 0 70px rgba(220, 38, 38, 0.8); }
 }
 
 #card-wrapper { 
     display: none; 
     flex-direction: column; 
     align-items: center; 
-    animation: cardEntry 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+    animation: cardEntry 0.8s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 @keyframes cardEntry {
-    from { opacity: 0; transform: scale(0.9) translateY(40px); }
+    from { opacity: 0; transform: scale(0.8) translateY(50px); }
     to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 #player-card { 
-    background: linear-gradient(145deg, #1a1a1a, #0d0d0d); 
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(250, 204, 21, 0.2); 
-    padding: 45px 35px; 
-    border-radius: 35px; 
-    width: 360px; 
+    background: linear-gradient(160deg, #111111, #050505); 
+    backdrop-filter: blur(25px);
+    border: 2px solid rgba(255, 255, 255, 0.05); 
+    padding: 50px 35px; 
+    border-radius: 40px; 
+    width: 370px; 
     text-align: left; 
     position: relative;
     overflow: hidden;
-    transition: all 0.5s ease;
+    transition: all 0.6s ease;
 }
+
+/* ROZETLER (Badges) */
+.badge-box {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    min-height: 22px;
+}
+
+.badge {
+    font-size: 8px;
+    padding: 4px 12px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #facc15;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+#card-nick { 
+    text-align: center; 
+    color: #38bdf8; 
+    font-size: 34px; 
+    font-weight: 950; 
+    margin: 0; 
+    text-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+    letter-spacing: -1px;
+}
+
+.card-subtext { text-align: center; font-size: 10px; opacity: 0.4; margin-bottom: 25px; letter-spacing: 3px; text-transform: uppercase; }
+
+/* Rank Tasarımı */
+.rank-container {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+#card-rank { 
+    font-size: 24px; 
+    font-weight: 900; 
+    color: #fff; 
+    letter-spacing: 4px;
+    text-shadow: 0 0 20px rgba(255,255,255,0.2);
+}
+
+.card-brag { font-size: 12px; color: #64748b; font-style: italic; margin-top: 4px; }
+
+/* K/D Odak Noktası */
+.kd-box { 
+    background: rgba(255, 255, 255, 0.02); 
+    border: 1px solid rgba(255, 255, 255, 0.04); 
+    border-radius: 30px; 
+    padding: 30px; 
+    margin-bottom: 35px; 
+    text-align: center; 
+}
+
+.kd-label { font-size: 9px; color: #475569; font-weight: 900; letter-spacing: 3px; margin-bottom: 12px; display: block;}
+#card-kd { font-size: 64px; font-weight: 950; display: block; line-height: 1; }
+
+.stat-row { display: flex; justify-content: space-between; margin: 18px 10px; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 10px; }
+.stat-row b { color: #334155; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; }
+.stat-row span { font-weight: 800; font-size: 20px; color: #f1f5f9; }
 
 .card-watermark {
     position: absolute;
     bottom: 15px;
-    right: 20px;
-    font-size: 9px;
+    right: 25px;
+    font-size: 8px;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    opacity: 0.3;
+    letter-spacing: 3px;
+    opacity: 0.2;
     color: #fff;
 }
 
-#card-nick { text-align: center; color: #38bdf8; font-size: 32px; font-weight: 900; margin: 0; text-shadow: 0 0 20px rgba(56, 189, 248, 0.3); }
-.card-subtext { text-align: center; font-size: 11px; opacity: 0.5; margin-bottom: 25px; letter-spacing: 2px; }
-.card-rank { text-align: center; font-size: 18px; font-weight: 900; color: #fff; margin-bottom: 5px; }
-.card-brag { text-align: center; font-size: 13px; margin-bottom: 35px; color: #94a3b8; }
-
-.kd-box { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 25px; padding: 25px; margin-bottom: 30px; text-align: center; }
-.kd-label { font-size: 10px; color: #64748b; font-weight: 900; letter-spacing: 2px; margin-bottom: 10px; display: block;}
-#card-kd { font-size: 54px; font-weight: 900; display: block; line-height: 1; }
-
-.stat-row { display: flex; justify-content: space-between; margin: 15px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px; }
-.stat-row b { color: #475569; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
-.stat-row span { font-weight: 800; font-size: 18px; color: #f8fafc; }
-
 .download-btn { 
-    margin-top: 45px; 
-    background: linear-gradient(90deg, #38bdf8, #0284c7);
-    color: white; 
-    width: 360px; 
-    padding: 18px;
-    font-weight: 900;
+    margin-top: 50px; 
+    background: linear-gradient(135deg, #facc15, #ca8a04);
+    color: #000; 
+    width: 370px; 
+    padding: 20px;
+    font-weight: 950; 
     text-transform: uppercase;
     border: none;
-    border-radius: 18px;
+    border-radius: 20px;
     cursor: pointer;
-    box-shadow: 0 15px 30px rgba(2, 132, 199, 0.3);
-    transition: 0.4s;
+    box-shadow: 0 20px 40px rgba(202, 138, 4, 0.2);
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     letter-spacing: 2px;
 }
+
+.download-btn:hover { transform: scale(1.02) translateY(-5px); box-shadow: 0 25px 50px rgba(202, 138, 4, 0.4); }
 </style>
 </head>
 
 <body>
 <div class="content-wrap">
-    <h1>Kayıtlı Oyuncu Veritabanı</h1>
+    <h1>Oyuncu Onur Arşivi</h1>
 
     <div class="search-box">
-        <input id="nick-input" placeholder="Nickinizi giriniz..." onkeydown="if(event.key==='Enter')fetchPlayerStats()">
+        <input id="nick-input" placeholder="Kimliği sorgula..." onkeydown="if(event.key==='Enter')fetchPlayerStats()">
         <button id="search-btn" onclick="fetchPlayerStats()">Sorgula</button>
     </div>
 
-    <div id="error-message" style="color: #ef4444; margin-bottom: 20px; display: none; font-weight: bold;"></div>
+    <div id="error-message" style="color: #ef4444; margin-bottom: 30px; display: none; font-weight: bold; font-size: 14px;"></div>
 
     <div id="card-wrapper">
         <div id="player-card">
+            <!-- Dinamik Rozetler -->
+            <div id="badge-box" class="badge-box"></div>
+
             <h2 id="card-nick"></h2>
-            <div class="card-subtext">SEHRIN EFENDILERI | GLOBAL ELITE CARD</div>
-            <div id="card-rank" class="card-rank"></div>
-            <div id="card-brag" class="card-brag"></div>
+            <div class="card-subtext">SEHRIN EFENDILERI | 95.173.173.81</div>
+            
+            <div class="rank-container">
+                <div id="card-rank"></div>
+                <div id="card-brag"></div>
+            </div>
 
             <div class="kd-box">
-                <span class="kd-label">PERFORMANS SKORU (K/D)</span>
+                <span class="kd-label">PERFORMANS İNDEKSİ</span>
                 <span id="card-kd">0.00</span>
             </div>
 
-            <div class="stat-row"><b>TOPLAM LEŞ</b> <span id="card-kills">0</span></div>
-            <div class="stat-row"><b>TOPLAM ÖLÜM</b> <span id="card-deaths">0</span></div>
-            <div class="stat-row"><b>KAFA VURUŞU</b> <span id="card-hs">%0</span></div>
-            <div class="stat-row"><b>HASAR GÜCÜ</b> <span id="card-dmg">0</span></div>
+            <div class="stat-row"><b>LEŞ</b> <span id="card-kills">0</span></div>
+            <div class="stat-row"><b>ÖLÜM</b> <span id="card-deaths">0</span></div>
+            <div class="stat-row"><b>HS</b> <span id="card-hs">%0</span></div>
+            <div class="stat-row"><b>HASAR</b> <span id="card-dmg">0</span></div>
             
-            <div class="card-watermark">95.173.173.81</div>
+            <div class="card-watermark">SERVER AUTHORITY</div>
         </div>
-        <button class="download-btn" onclick="downloadCard()">KARTI OLUŞTUR VE İNDİR</button>
+        <button class="download-btn" onclick="downloadCard()">ONUR KARTINI SAKLA</button>
     </div>
 </div>
 
@@ -208,10 +267,10 @@ const el = {
     hs: document.getElementById('card-hs'),
     dmg: document.getElementById('card-dmg'),
     rank: document.getElementById('card-rank'),
-    brag: document.getElementById('card-brag')
+    brag: document.getElementById('card-brag'),
+    badges: document.getElementById('badge-box')
 };
 
-// Sayı Sayma Animasyonu
 function animateValue(obj, start, end, duration, isFloat = false) {
     let startTimestamp = null;
     const step = (timestamp) => {
@@ -224,13 +283,21 @@ function animateValue(obj, start, end, duration, isFloat = false) {
     window.requestAnimationFrame(step);
 }
 
-// Dinamik Tema Güncelleme
 function updateCardTheme(kd) {
     el.card.classList.remove('theme-acemi', 'theme-yetenekli', 'theme-usta', 'theme-efsane');
     if(kd >= 2.5) el.card.classList.add('theme-efsane');
     else if(kd >= 1.8) el.card.classList.add('theme-usta');
     else if(kd >= 1.2) el.card.classList.add('theme-yetenekli');
     else el.card.classList.add('theme-acemi');
+}
+
+function updateBadges(p, kd, hs) {
+    let badges = [];
+    if(hs >= 35) badges.push("HS CANAVARI");
+    if(kd >= 2.0) badges.push("DURDURULAMAZ");
+    if((Number(p.total_damage) || 0) > 1000000) badges.push("YIKICI GÜÇ");
+    
+    el.badges.innerHTML = badges.map(b => `<span class="badge">${b}</span>`).join('');
 }
 
 let isLoading = false;
@@ -248,7 +315,7 @@ async function fetchPlayerStats(){
         const { data, error } = await supabaseClient.rpc('search_player',{search_input:input});
 
         if(error || !data || data.length === 0){
-            el.error.innerText = "Oyuncu bulunamadı!";
+            el.error.innerText = "Sistemde böyle bir kayıt bulunamadı!";
             el.error.style.display = "block";
             isLoading = false; el.btn.disabled = false; el.btn.innerText = "Sorgula";
             return;
@@ -262,28 +329,27 @@ async function fetchPlayerStats(){
 
         el.nick.innerText = p.nick;
         updateCardTheme(kdVal);
+        updateBadges(p, kdVal, hs);
 
-        // Renk Belirleme
         el.kd.style.color = kdVal >= 1.5 ? "#22c55e" : kdVal >= 1 ? "#facc15" : "#ef4444";
 
-        if(kdVal >= 2.5) { el.rank.innerText = "EFSANE"; el.brag.innerText = "Sunucunun tek hakimi."; }
+        if(kdVal >= 2.5) { el.rank.innerText = "EFSANE"; el.brag.innerText = "Sunucunun mutlak hakimi."; }
         else if(kdVal >= 1.8) { el.rank.innerText = "USTA"; el.brag.innerText = "Rakiplerin korkulu rüyası."; }
         else if(kdVal >= 1.2) { el.rank.innerText = "YETENEKLİ"; el.brag.innerText = "Savaş alanında fark yaratıyor."; }
-        else { el.rank.innerText = "ACEMİ"; el.brag.innerText = "Gelişmeye devam ediyor."; }
+        else { el.rank.innerText = "ACEMİ"; el.brag.innerText = "Gelecek vaat ediyor."; }
 
         el.wrapper.style.display = "flex";
 
-        // Animasyonları Başlat
         setTimeout(() => {
-            animateValue(el.kd, 0, kdVal, 1000, true);
-            animateValue(el.kills, 0, kills, 1000);
-            animateValue(el.deaths, 0, deaths, 1000);
-            animateValue(el.dmg, 0, (Number(p.total_damage) || 0), 1000);
+            animateValue(el.kd, 0, kdVal, 1200, true);
+            animateValue(el.kills, 0, kills, 1200);
+            animateValue(el.deaths, 0, deaths, 1200);
+            animateValue(el.dmg, 0, (Number(p.total_damage) || 0), 1200);
             el.hs.innerHTML = "%" + hs;
-        }, 100);
+        }, 150);
 
     } catch(err) {
-        el.error.innerText = "Sunucu bağlantı hatası.";
+        el.error.innerText = "Bağlantı başarısız.";
         el.error.style.display = "block";
     } finally {
         isLoading = false;
@@ -296,7 +362,7 @@ function downloadCard(){
     html2canvas(el.card,{backgroundColor:null,scale:3,useCORS:true}).then(c=>{
         const a = document.createElement("a");
         a.href = c.toDataURL("image/png");
-        a.download = `${el.nick.innerText}_Stats.png`;
+        a.download = `${el.nick.innerText}_EFENDI_ONUR_KARTI.png`;
         a.click();
     });
 }
