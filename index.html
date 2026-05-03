@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Şehrin Efendileri - Oyuncu Kartı</title>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <style>
-        /* 1. ARKA PLAN VE OVERLAY GÜNCELLEMESİ */
         body { 
             background: url("banner.jpg") no-repeat center center fixed;
             background-size: cover;
@@ -23,7 +24,6 @@
             position: relative;
         }
 
-        /* Görsel gürültüyü azaltan overlay katmanı */
         body::before {
             content: "";
             position: fixed;
@@ -32,7 +32,6 @@
             z-index: 0;
         }
 
-        /* Tüm içeriği üstte tutmak için wrap */
         .content-wrap { position: relative; z-index: 10; width: 100%; max-width: 500px; }
 
         h1 { 
@@ -43,7 +42,6 @@
             text-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
-        /* 2. INPUT UI İYİLEŞTİRMESİ */
         #nick-input { 
             padding: 12px 20px; 
             border-radius: 8px; 
@@ -73,7 +71,6 @@
 
         #error-message { color: #ef4444; margin: 15px; display: none; font-weight: bold; }
 
-        /* 3. CAM EFEKTİ VE SPACING GÜNCELLEMESİ */
         #card-wrapper { display: none; flex-direction: column; align-items: center; margin-top: 60px; }
         
         #player-card { 
@@ -107,15 +104,39 @@
             font-weight: 900;
         }
 
-        /* 7. MİKRO DETAY (OPACITY VE LETTER SPACING) */
         .card-subtext { 
             text-align: center; 
             font-size: 10px; 
             color: #ffffff; 
             opacity: 0.7; 
-            margin-bottom: 25px; 
+            margin-bottom: 10px; 
             letter-spacing: 1px; 
             font-weight: 600;
+        }
+
+        .card-rank {
+            text-align: center;
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .card-brag {
+            text-align: center;
+            font-size: 11px;
+            margin-bottom: 15px;
+            color: #94a3b8;
+            letter-spacing: 1px;
+        }
+
+        .card-share {
+            text-align: center;
+            font-size: 11px;
+            margin-bottom: 15px;
+            color: #38bdf8;
+            letter-spacing: 1px;
+            font-weight: 700;
         }
 
         .stat-row { 
@@ -126,20 +147,19 @@
             border-bottom: 1px solid rgba(255,255,255,0.05);
             padding-bottom: 8px;
         }
-        .stat-row b { color: #94a3b8; font-weight: 500; text-transform: uppercase; font-size: 12px; align-self: center; }
-        .stat-row span { color: #f8fafc; font-weight: bold; font-size: 18px; }
 
-        /* 4. K/D ÖZEL VURGU VE DİNAMİK RENK */
+        .stat-row b { color: #94a3b8; font-size: 12px; }
+        .stat-row span { font-weight: bold; font-size: 18px; }
+
         .kd-row { 
             background: rgba(255, 255, 255, 0.03); 
             padding: 12px; 
             border-radius: 10px; 
-            border: 1px solid rgba(255,255,255,0.05);
             margin-bottom: 20px;
         }
+
         #card-kd { font-size: 28px; }
 
-        /* 5. BUTON GLOW VE HİYERARŞİ */
         .download-btn { 
             margin-top: 30px; 
             background: #38bdf8; 
@@ -148,21 +168,17 @@
             margin-left: 0; 
             font-weight: 800;
             text-transform: uppercase;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
-        }
-        .download-btn:hover { 
-            background: #0ea5e9; 
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
         }
     </style>
 </head>
+
 <body>
 
 <div class="content-wrap">
     <h1>OYUNCU KARTI OLUŞTUR</h1>
     
-    <div style="position: relative; z-index: 20;">
-        <input type="text" id="nick-input" placeholder="Oyuncu Nickini Girin...">
+    <div>
+        <input type="text" id="nick-input" placeholder="Oyuncu Nickini Girin..." onkeydown="if(event.key==='Enter')fetchPlayerStats()">
         <button onclick="fetchPlayerStats()">Sorgula</button>
     </div>
     
@@ -172,83 +188,94 @@
         <div id="player-card">
             <h2 id="card-nick"></h2>
             <div class="card-subtext">SEHRIN EFENDILERI | 95.173.173.81</div>
-            
-            <div class="stat-row kd-row"><b>K/D ORANI</b> <span id="card-kd"></span></div>
-            <div class="stat-row"><b>ÖLDÜRME</b> <span id="card-kills"></span></div>
-            <div class="stat-row"><b>ÖLME</b> <span id="card-deaths"></span></div>
-            <div class="stat-row"><b>HS ORANI</b> <span id="card-hs"></span></div>
-            <div class="stat-row"><b>HASAR</b> <span id="card-dmg"></span></div>
+
+            <div id="card-rank" class="card-rank"></div>
+            <div id="card-brag" class="card-brag"></div>
+            <div class="card-share">PAYLAŞ & RAKİPLERİNİ EZ 🔥</div>
+
+            <div class="stat-row kd-row"><b>K/D</b> <span id="card-kd"></span></div>
+            <div class="stat-row"><b>KILL</b> <span id="card-kills"></span></div>
+            <div class="stat-row"><b>DEATH</b> <span id="card-deaths"></span></div>
+            <div class="stat-row"><b>HS</b> <span id="card-hs"></span></div>
+            <div class="stat-row"><b>DMG</b> <span id="card-dmg"></span></div>
         </div>
-        <button class="download-btn" onclick="downloadCard()">KARTI İNDİR (PNG)</button>
+
+        <button class="download-btn" onclick="downloadCard()">KARTI İNDİR & PAYLAŞ</button>
     </div>
 </div>
 
-    <script>
-        const _URL = "https://ksevvntxdkuexulklmph.supabase.co";
-        const _KEY = "sb_publishable_9iHDw5_WEWyNnCz_wXIMuA_VPt36UTL";
-        const supabaseClient = window.supabase.createClient(_URL, _KEY);
+<script>
+const supabaseClient = window.supabase.createClient(
+    "https://ksevvntxdkuexulklmph.supabase.co",
+    "sb_publishable_9iHDw5_WEWyNnCz_wXIMuA_VPt36UTL"
+);
 
-        const el = {
-            input: document.getElementById('nick-input'),
-            error: document.getElementById('error-message'),
-            wrapper: document.getElementById('card-wrapper'),
-            card: document.getElementById('player-card'),
-            nick: document.getElementById('card-nick'),
-            kd: document.getElementById('card-kd'),
-            kills: document.getElementById('card-kills'),
-            deaths: document.getElementById('card-deaths'),
-            hs: document.getElementById('card-hs'),
-            dmg: document.getElementById('card-dmg')
-        };
+const el = {
+    input: document.getElementById('nick-input'),
+    error: document.getElementById('error-message'),
+    wrapper: document.getElementById('card-wrapper'),
+    card: document.getElementById('player-card'),
+    nick: document.getElementById('card-nick'),
+    kd: document.getElementById('card-kd'),
+    kills: document.getElementById('card-kills'),
+    deaths: document.getElementById('card-deaths'),
+    hs: document.getElementById('card-hs'),
+    dmg: document.getElementById('card-dmg'),
+    rank: document.getElementById('card-rank'),
+    brag: document.getElementById('card-brag')
+};
 
-        async function fetchPlayerStats() {
-            const input = el.input.value.trim();
-            if (!input) { alert("Nick girin!"); return; }
-            
-            el.error.style.display = "none";
-            el.wrapper.style.display = "none";
+async function fetchPlayerStats(){
+    const input = el.input.value.trim();
+    if(!input) return;
 
-            try {
-                const { data, error } = await supabaseClient.rpc('search_player', { search_input: input });
-                
-                if (error || !data || data.length === 0) {
-                    el.error.innerText = "Oyuncu bulunamadı!";
-                    el.error.style.display = "block";
-                    return;
-                }
+    el.error.style.display = "none";
+    el.wrapper.style.display = "none";
 
-                const p = data[0];
-                const kdVal = (p.total_kills / (p.total_deaths || 1)).toFixed(2);
-                
-                el.nick.innerText = p.nick;
-                el.kd.innerText = kdVal;
+    const { data } = await supabaseClient.rpc('search_player',{search_input:input});
 
-                // 4. DİNAMİK RENK MANTIĞI UYGULAMASI
-                if (parseFloat(kdVal) >= 1.5) el.kd.style.color = "#22c55e"; // Yeşil (Efsane)
-                else if (parseFloat(kdVal) >= 1.0) el.kd.style.color = "#facc15"; // Sarı (Orta/İyi)
-                else el.kd.style.color = "#ef4444"; // Kırmızı (Zayıf)
+    if(!data || data.length===0){
+        el.error.innerText="Oyuncu bulunamadı!";
+        el.error.style.display="block";
+        return;
+    }
 
-                el.kills.innerText = p.total_kills;
-                el.deaths.innerText = p.total_deaths;
-                el.hs.innerText = `%${p.hs_percent}`;
-                el.dmg.innerText = p.total_damage.toLocaleString();
-                
-                el.wrapper.style.display = "flex";
-            } catch (e) {
-                console.error(e);
-                el.error.innerText = "Sunucu hatası!";
-                el.error.style.display = "block";
-            }
-        }
+    const p = data[0];
+    const kd = (p.total_kills/(p.total_deaths||1)).toFixed(2);
+    const kdNum = parseFloat(kd);
+    const hs = p.hs_percent||0;
 
-        function downloadCard() {
-            html2canvas(el.card, { backgroundColor: null, scale: 3, useCORS: true }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `${el.nick.innerText}_Stats.png`;
-                link.href = canvas.toDataURL("image/png");
-                link.click();
-            });
-        }
-    </script>
+    el.nick.innerText=p.nick;
+    el.kd.innerText=kd;
+
+    if(kdNum>=2.5){el.rank.innerText="LEGEND";el.brag.innerText="SUNUCUYU EZİYOR";}
+    else if(kdNum>=1.8){el.rank.innerText="ELITE";el.brag.innerText="RAKİPLERİ DOMİNE EDİYOR";}
+    else if(kdNum>=1.2){el.rank.innerText="SKILLED";el.brag.innerText="GÜÇLÜ PERFORMANS";}
+    else if(kdNum>=0.8){el.rank.innerText="AVERAGE";el.brag.innerText="ORTA SEVİYE";}
+    else{el.rank.innerText="NOOB";el.brag.innerText="GELİŞİYOR";}
+
+    if(hs>=40) el.rank.innerText+=" • HS GOD";
+    else if(hs>=30) el.rank.innerText+=" • SHARPSHOOTER";
+
+    el.kd.style.color = kdNum>=1.5?"#22c55e":kdNum>=1?"#facc15":"#ef4444";
+
+    el.kills.innerText=p.total_kills;
+    el.deaths.innerText=p.total_deaths;
+    el.hs.innerText="%"+hs;
+    el.dmg.innerText=p.total_damage.toLocaleString();
+
+    el.wrapper.style.display="flex";
+}
+
+function downloadCard(){
+    html2canvas(el.card,{backgroundColor:null,scale:3}).then(c=>{
+        const a=document.createElement("a");
+        a.href=c.toDataURL();
+        a.download="player.png";
+        a.click();
+    });
+}
+</script>
+
 </body>
 </html>
