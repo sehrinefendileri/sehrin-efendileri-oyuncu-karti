@@ -155,7 +155,6 @@ async function fetchPlayerStats(overrideNick = null){
         if(error || !data || data.length === 0) {
             document.getElementById('error-message').innerText = "Oyuncu bulunamadı!";
             document.getElementById('error-message').style.display = "block";
-            // HATA DURUMUNDA URL TEMİZLE
             window.history.pushState({}, '', window.location.pathname);
             return;
         }
@@ -167,16 +166,15 @@ async function fetchPlayerStats(overrideNick = null){
         
         document.getElementById('card-nick').innerText = p.nick;
         
-        // URL'Yİ GÜNCELLE
         const newUrl = window.location.origin + window.location.pathname + "?nick=" + encodeURIComponent(p.nick);
         window.history.pushState({ path: newUrl }, '', newUrl);
 
-        // TEMA VE RANK MANTIĞI
         const card = document.getElementById('player-card');
         card.className = ''; 
         const rankEl = document.getElementById('card-rank');
         const bragEl = document.getElementById('card-brag');
 
+        // GÜNCEL RÜTBE VE TANIMLAR
         if(kdVal >= 2.5) { 
             rankEl.innerText = "EFSANE"; bragEl.innerText = "Oyuna yön veriyor."; card.classList.add('theme-efsane'); 
         } else if(kdVal >= 1.8) { 
@@ -187,11 +185,11 @@ async function fetchPlayerStats(overrideNick = null){
             rankEl.innerText = "ACEMİ"; bragEl.innerText = "Başlangıç seviyesinde."; card.classList.add('theme-acemi'); 
         }
 
-        // ROZETLER
+        // GÜNCEL ROZET MANTIĞI (SAVAŞÇI)
         let badges = [];
         if((p.hs_percent||0) >= 35) badges.push("HS MAKİNESİ");
         if(kdVal >= 2.0) badges.push("DURDURULAMAZ");
-        if((p.total_damage||0) > 1000000) badges.push("TECRÜBELİ");
+        if((p.total_damage||0) > 1000000) badges.push("SAVAŞÇI");
         document.getElementById('badge-box').innerHTML = badges.map(b => `<span class="badge">${b}</span>`).join('');
 
         document.getElementById('card-wrapper').style.display = "flex";
