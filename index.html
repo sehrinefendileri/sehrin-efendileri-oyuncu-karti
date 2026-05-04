@@ -45,11 +45,11 @@ h1 { color: rgba(250, 204, 21, 0.6); margin: 5px 0 15px 0; text-transform: upper
     box-shadow: 0 15px 40px rgba(0,0,0,0.6);
 }
 
-/* ROZETLER (SAVAŞÇI vb.) - BÜYÜTÜLDÜ VE GÜÇLENDİRİLDİ */
+/* ROZETLER */
 .badge-box { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; min-height: 30px; }
 .badge { 
-    font-size: 11px; /* Boyut büyütüldü */
-    padding: 5px 14px; /* İç boşluk artırıldı */
+    font-size: 11px; 
+    padding: 5px 14px; 
     border-radius: 8px; 
     background: rgba(56,189,248,0.2); 
     color: #38bdf8; 
@@ -72,7 +72,6 @@ h1 { color: rgba(250, 204, 21, 0.6); margin: 5px 0 15px 0; text-transform: upper
     text-shadow: 0 0 15px rgba(250, 204, 21, 0.5);
 }
 
-/* SUNUCU VE IP BİLGİSİ */
 .card-server-info { 
     text-align: center; 
     color: #94a3b8; 
@@ -208,7 +207,8 @@ async function fetchPlayerStats(overrideNick = null){
         
         document.getElementById('card-nick').innerText = p.nick;
         
-        const newUrl = window.location.origin + window.location.pathname + "?nick=" + encodeURIComponent(p.nick);
+        // ADRES GÜNCELLEMESİ: Yeni kullanıcı adına göre URL yapısı
+        const newUrl = "https://sehrinefendileri.github.io/sehrin-efendileri-oyuncu-karti/?nick=" + encodeURIComponent(p.nick);
         window.history.pushState({ path: newUrl }, '', newUrl);
 
         const card = document.getElementById('player-card');
@@ -249,7 +249,8 @@ async function fetchPlayerStats(overrideNick = null){
 function copyShareLink() {
     const nickEl = document.getElementById('card-nick');
     if (!nickEl.innerText) return;
-    const shareUrl = window.location.origin + window.location.pathname + "?nick=" + encodeURIComponent(nickEl.innerText);
+    // ADRES GÜNCELLEMESİ: Discord için kopyalanan link yeni adrese yönlendirildi
+    const shareUrl = "https://sehrinefendileri.github.io/sehrin-efendileri-oyuncu-karti/?nick=" + encodeURIComponent(nickEl.innerText);
     navigator.clipboard.writeText(shareUrl).then(() => {
         alert("Discord paylaşım linki kopyalandı!");
     });
