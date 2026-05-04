@@ -4,11 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Şehrin Efendileri - Oyuncu Kartı</title>
+
 <!-- Sosyal Medya Önizleme (OG Tags) -->
 <meta property="og:title" content="Şehrin Efendileri - Oyuncu Kartı">
 <meta property="og:description" content="Senin istatistiklerin sunucunun efendisi olmaya yetecek mi? Hemen sorgula ve meydan oku!">
 <meta property="og:image" content="banner.jpg">
 <meta property="og:type" content="website">
+
+<!-- Harici Kütüphaneler -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
@@ -59,12 +62,6 @@ h1 { color: rgba(250, 204, 21, 0.5); margin: 10px 0; text-transform: uppercase; 
 .action-buttons { display: flex; gap: 8px; width: 330px; }
 .download-btn { flex: 1.5; background: #38bdf8; color: #fff; padding: 12px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
 .share-btn { flex: 1; background: #22c55e; color: #fff; padding: 12px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
-
-/* LEADERBOARD */
-.leaderboard-container { background: rgba(0,0,0,0.5); border: 1px solid rgba(250, 204, 21, 0.3); border-radius: 20px; padding: 15px; width: 330px; margin-top: 10px; }
-.leaderboard-title { color: #facc15; font-size: 14px; font-weight: 900; margin-bottom: 10px; letter-spacing: 2px; }
-.leaderboard-item { display: flex; justify-content: space-between; font-size: 12px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-.gold { color: #ffd700 !important; font-weight: 900; }
 </style>
 </head>
 
@@ -100,11 +97,6 @@ h1 { color: rgba(250, 204, 21, 0.5); margin: 10px 0; text-transform: uppercase; 
             <button class="share-btn" onclick="copyShareLink()">LİNKİ PAYLAŞ</button>
         </div>
     </div>
-
-    <div class="leaderboard-container">
-        <div class="leaderboard-title">🏆 TOP 5 EFENDİ</div>
-        <div id="leaderboard-list">Yükleniyor...</div>
-    </div>
 </div>
 
 <script>
@@ -113,9 +105,8 @@ const supabaseClient = window.supabase.createClient(
     "sb_publishable_9iHDw5_WEWyNnCz_wXIMuA_VPt36UTL"
 );
 
-// BAŞLANGIÇ AYARLARI
+// BAŞLANGIÇ: URL'de nick varsa otomatik sorgula
 document.addEventListener('DOMContentLoaded', () => {
-    fetchLeaderboard();
     const urlParams = new URLSearchParams(window.location.search);
     const nickParam = urlParams.get('nick');
     if (nickParam) {
@@ -123,26 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchPlayerStats(nickParam);
     }
 });
-
-async function fetchLeaderboard() {
-    try {
-        const { data, error } = await supabaseClient
-            .from('players') 
-            .select('nick, total_kills, total_deaths')
-            .order('total_kills', { ascending: false })
-            .limit(5);
-
-        if (error) throw error;
-        document.getElementById('leaderboard-list').innerHTML = data.map((p, i) => `
-            <div class="leaderboard-item">
-                <span class="${i===0?'gold':''}">#${i+1} ${p.nick}</span>
-                <span style="color:#facc15; font-weight:800;">${(p.total_kills/(p.total_deaths||1)).toFixed(2)} KD</span>
-            </div>
-        `).join('');
-    } catch (err) {
-        document.getElementById('leaderboard-list').innerHTML = "Liderlik tablosu şu an kapalı.";
-    }
-}
 
 function animateValue(obj, start, end, duration, isFloat = false) {
     let startTimestamp = null;
@@ -187,7 +158,6 @@ async function fetchPlayerStats(overrideNick = null){
         card.className = ''; 
         const rankEl = document.getElementById('card-rank');
         const bragEl = document.getElementById('card-brag');
-        bragEl.className = 'card-brag';
 
         if(kdVal >= 2.5) { rankEl.innerText = "EFSANE"; bragEl.innerText = "Oyuna yön veriyor."; card.classList.add('theme-efsane'); }
         else if(kdVal >= 1.8) { rankEl.innerText = "USTA"; bragEl.innerText = "Kontrolü elinde tutuyor."; card.classList.add('theme-usta'); }
@@ -203,12 +173,12 @@ async function fetchPlayerStats(overrideNick = null){
 
         document.getElementById('card-wrapper').style.display = "flex";
 
-        // ANİMASYONLAR
+        // SAYI ANİMASYONLARI
         setTimeout(() => {
             animateValue(document.getElementById('card-kd'), 0, kdVal, 1000, true);
             animateValue(document.getElementById('card-kills'), 0, kills, 1000);
             animateValue(document.getElementById('card-deaths'), 0, deaths, 1000);
-            animateValue(document.getElementById('card-dmg'), 0, (p.total_damage||0), 1000);
+            animateValue(document.getElementById('card-dmg'), 0, Number(p.total_damage||0), 1000);
             document.getElementById('card-hs').innerText = "%" + (p.hs_percent || 0);
         }, 100);
 
