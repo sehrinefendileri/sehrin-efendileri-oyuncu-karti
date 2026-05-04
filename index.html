@@ -1,122 +1,124 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Şehrin Efendileri - Oyuncu Kartı</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Şehrin Efendileri - Oyuncu Kartı</title>
 
-<!-- Sosyal Medya Önizleme (OG Tags) -->
-<meta property="og:title" content="Şehrin Efendileri - Oyuncu Kartı">
-<meta property="og:description" content="Senin istatistiklerin sunucunun efendisi olmaya yetecek mi? Hemen sorgula ve meydan oku!">
-<meta property="og:image" content="banner.jpg">
-<meta property="og:type" content="website">
+    <!-- Sosyal Medya Önizleme (OG Tags) -->
+    <meta property="og:title" content="Şehrin Efendileri - Oyuncu Kartı">
+    <meta property="og:description" content="Senin istatistiklerin sunucunun efendisi olmaya yetecek mi? Hemen sorgula ve meydan oku!">
+    <meta property="og:image" content="banner.jpg">
+    <meta property="og:type" content="website">
 
-<!-- Harici Kütüphaneler -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Harici Kütüphaneler -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-<style>
-/* GENEL TASARIM */
-body { 
-    background: url("banner.jpg") no-repeat center center fixed;
-    background-size: cover; color: #fff; font-family: 'Segoe UI', sans-serif; text-align: center;
-    padding: 10px; min-height: 100vh; margin: 0; display: flex; flex-direction: column; align-items: center;
-}
-body::before { content: ""; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 0; }
-.content-wrap { position: relative; z-index: 10; width: 100%; max-width: 450px; padding-top: 5px; }
+    <style>
+        /* GENEL TASARIM */
+        body { 
+            background: url("banner.jpg") no-repeat center center fixed;
+            background-size: cover; color: #fff; font-family: 'Segoe UI', sans-serif; text-align: center;
+            padding: 10px; min-height: 100vh; margin: 0; display: flex; flex-direction: column; align-items: center;
+        }
+        body::before { content: ""; position: fixed; inset: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(10px); z-index: 0; }
+        .content-wrap { position: relative; z-index: 10; width: 100%; max-width: 450px; padding-top: 5px; }
 
-h1 { color: rgba(250, 204, 21, 0.6); margin: 5px 0 15px 0; text-transform: uppercase; letter-spacing: 3px; font-size: 15px; }
+        /* BAŞLIK: Gümüş/Platin Efekti */
+        h1 { color: #e5e7eb; margin: 5px 0 15px 0; text-transform: uppercase; letter-spacing: 3px; font-size: 15px; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
 
-/* ARAMA ALANI */
-.search-box { margin-bottom: 20px; display: flex; justify-content: center; }
-#nick-input { padding: 10px; border-radius: 8px 0 0 8px; border: 1px solid #38bdf8; width: 170px; background: #111; color: #fff; outline: none; font-size: 13px; }
-#search-btn { padding: 10px 18px; cursor: pointer; background: #facc15; border: none; border-radius: 0 8px 8px 0; font-weight: 800; color: #000; font-size: 13px; }
+        /* ARAMA ALANI */
+        .search-box { margin-bottom: 20px; display: flex; justify-content: center; }
+        #nick-input { padding: 10px; border-radius: 8px 0 0 8px; border: 1px solid #7f1d1d; width: 170px; background: #000; color: #fff; outline: none; font-size: 13px; }
+        #search-btn { padding: 10px 18px; cursor: pointer; background: #7f1d1d; border: none; border-radius: 0 8px 8px 0; font-weight: 800; color: #fff; font-size: 13px; transition: 0.3s; }
+        #search-btn:hover { background: #991b1b; }
 
-/* KART TASARIMI */
-#card-wrapper { display: none; flex-direction: column; align-items: center; }
-#player-card { 
-    background: linear-gradient(160deg, #111, #050505); 
-    border: 2px solid rgba(255,255,255,0.1); 
-    padding: 25px; 
-    border-radius: 28px; 
-    width: 380px; 
-    text-align: left; 
-    position: relative; 
-    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-}
+        /* KART TASARIMI: Koyu Bordo Teması */
+        #card-wrapper { display: none; flex-direction: column; align-items: center; }
+        #player-card { 
+            background: linear-gradient(160deg, #1a0505, #000); 
+            border: 2px solid rgba(229, 231, 235, 0.15); 
+            padding: 25px; 
+            border-radius: 28px; 
+            width: 380px; 
+            text-align: left; 
+            position: relative; 
+            box-shadow: 0 15px 50px rgba(0,0,0,0.8);
+        }
 
-/* ROZETLER */
-.badge-box { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; min-height: 30px; }
-.badge { 
-    font-size: 11px; 
-    padding: 5px 14px; 
-    border-radius: 8px; 
-    background: rgba(56,189,248,0.2); 
-    color: #38bdf8; 
-    font-weight: 900; 
-    border: 1px solid rgba(56, 189, 248, 0.4); 
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
-}
+        /* ROZETLER: Gümüş Temalı */
+        .badge-box { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; min-height: 30px; }
+        .badge { 
+            font-size: 11px; 
+            padding: 5px 14px; 
+            border-radius: 8px; 
+            background: rgba(229, 231, 235, 0.1); 
+            color: #e5e7eb; 
+            font-weight: 900; 
+            border: 1px solid rgba(229, 231, 235, 0.3); 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+        }
 
-/* ODAK NOKTASI: PARLAYAN NICK */
-#card-nick { 
-    text-align: center; 
-    color: #facc15; 
-    font-size: 30px; 
-    font-weight: 950; 
-    margin: 0 0 45px 0; 
-    line-height: 1; 
-    text-transform: uppercase;
-    text-shadow: 0 0 15px rgba(250, 204, 21, 0.5);
-}
+        /* ODAK NOKTASI: PARLAYAN GÜMÜŞ NICK */
+        #card-nick { 
+            text-align: center; 
+            color: #f3f4f6; 
+            font-size: 30px; 
+            font-weight: 950; 
+            margin: 0 0 45px 0; 
+            line-height: 1; 
+            text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
 
-.card-server-info { 
-    text-align: center; 
-    color: #94a3b8; 
-    font-size: 10px; 
-    font-weight: 700; 
-    margin-bottom: 25px; 
-    letter-spacing: 1.2px;
-}
+        .card-server-info { 
+            text-align: center; 
+            color: #94a3b8; 
+            font-size: 10px; 
+            font-weight: 700; 
+            margin-bottom: 25px; 
+            letter-spacing: 1.2px;
+        }
 
-/* RANK TEMALARI */
-.theme-acemi { border-color: #475569 !important; box-shadow: 0 0 15px rgba(71, 85, 105, 0.2); }
-.theme-yetenekli { border-color: #38bdf8 !important; box-shadow: 0 0 20px rgba(56, 189, 248, 0.3); }
-.theme-usta { border-color: #facc15 !important; box-shadow: 0 0 25px rgba(250, 204, 21, 0.3); }
-.theme-efsane { border-color: #ef4444 !important; animation: glow 2s infinite alternate; }
-@keyframes glow { from { box-shadow: 0 0 10px rgba(239, 68, 68, 0.3); } to { box-shadow: 0 0 40px rgba(239, 68, 68, 0.7); } }
+        /* RANK TEMALARI: Kırmızı Tonları */
+        .theme-acemi { border-color: #4b5563 !important; }
+        .theme-yetenekli { border-color: #991b1b !important; box-shadow: 0 0 20px rgba(153, 27, 27, 0.3); }
+        .theme-usta { border-color: #ef4444 !important; box-shadow: 0 0 25px rgba(239, 68, 68, 0.4); }
+        .theme-efsane { border-color: #ffffff !important; animation: glow 2s infinite alternate; }
+        @keyframes glow { from { box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); } to { box-shadow: 0 0 35px rgba(185, 28, 28, 0.6); } }
 
-#card-rank { text-align: center; font-size: 22px; font-weight: 900; margin-bottom: 4px; letter-spacing: 2px; }
-#card-brag { text-align: center; font-size: 13px; color: #94a3b8; margin-bottom: 20px; font-style: italic; }
+        #card-rank { text-align: center; font-size: 22px; font-weight: 900; margin-bottom: 4px; letter-spacing: 2px; color: #f3f4f6; }
+        #card-brag { text-align: center; font-size: 13px; color: #94a3b8; margin-bottom: 20px; font-style: italic; }
 
-.kd-box { background: rgba(255,255,255,0.04); border-radius: 18px; padding: 12px; margin-bottom: 18px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
-#card-kd { font-size: 52px; font-weight: 950; display: block; line-height: 1; }
+        .kd-box { background: rgba(127, 29, 29, 0.15); border-radius: 18px; padding: 12px; margin-bottom: 18px; text-align: center; border: 1px solid rgba(127, 29, 29, 0.3); }
+        #card-kd { font-size: 52px; font-weight: 950; display: block; line-height: 1; color: #f3f4f6; }
 
-.stat-row { display: flex; justify-content: space-between; margin: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; font-size: 14px; }
-.stat-row b { color: #64748b; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
-.stat-row span { font-weight: 800; color: #eee; }
+        .stat-row { display: flex; justify-content: space-between; margin: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; font-size: 14px; }
+        .stat-row b { color: #94a3b8; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-row span { font-weight: 800; color: #eee; }
 
-/* AKSİYON BUTONLARI */
-.challenge-text { color: #facc15; font-size: 11px; font-weight: 800; margin: 12px 0; font-style: italic; }
-.action-buttons { display: flex; gap: 10px; width: 380px; }
-.btn-action { 
-    flex: 1; 
-    padding: 12px 5px; 
-    border-radius: 12px; 
-    font-weight: 800; 
-    cursor: pointer; 
-    font-size: 10px; 
-    transition: 0.2s;
-    background: #111;
-    border: 2px solid rgba(255,255,255,0.15);
-    color: #fff;
-}
-.btn-insta { border-color: #e1306c; color: #e1306c; }
-.btn-discord { border-color: #5865f2; color: #5865f2; }
-.btn-action:hover { transform: translateY(-2px); filter: brightness(1.2); }
-</style>
+        /* AKSİYON BUTONLARI */
+        .challenge-text { color: #94a3b8; font-size: 11px; font-weight: 800; margin: 12px 0; font-style: italic; }
+        .action-buttons { display: flex; gap: 10px; width: 380px; }
+        .btn-action { 
+            flex: 1; 
+            padding: 12px 5px; 
+            border-radius: 12px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            font-size: 10px; 
+            transition: 0.2s;
+            background: #000;
+            border: 2px solid rgba(255,255,255,0.15);
+            color: #fff;
+        }
+        .btn-insta { border-color: #b91c1c; color: #f3f4f6; background: #7f1d1d; }
+        .btn-discord { border-color: #4b5563; color: #f3f4f6; }
+        .btn-action:hover { transform: translateY(-2px); filter: brightness(1.2); }
+    </style>
 </head>
 
 <body>
@@ -137,7 +139,7 @@ h1 { color: rgba(250, 204, 21, 0.6); margin: 5px 0 15px 0; text-transform: upper
             <div id="card-rank"></div>
             <div id="card-brag"></div>
             <div class="kd-box">
-                <span style="font-size: 9px; color: #64748b; letter-spacing: 1px; font-weight: 800;">K/D PERFORMANSI</span>
+                <span style="font-size: 9px; color: #94a3b8; letter-spacing: 1px; font-weight: 800;">K/D PERFORMANSI</span>
                 <span id="card-kd">0.00</span>
             </div>
             <div class="stat-row"><b>ÖLDÜRME</b> <span id="card-kills">0</span></div>
@@ -207,7 +209,6 @@ async function fetchPlayerStats(overrideNick = null){
         
         document.getElementById('card-nick').innerText = p.nick;
         
-        // ADRES GÜNCELLEMESİ: Yeni kullanıcı adına göre URL yapısı
         const newUrl = "https://sehrinefendileri.github.io/sehrin-efendileri-oyuncu-karti/?nick=" + encodeURIComponent(p.nick);
         window.history.pushState({ path: newUrl }, '', newUrl);
 
@@ -249,7 +250,6 @@ async function fetchPlayerStats(overrideNick = null){
 function copyShareLink() {
     const nickEl = document.getElementById('card-nick');
     if (!nickEl.innerText) return;
-    // ADRES GÜNCELLEMESİ: Discord için kopyalanan link yeni adrese yönlendirildi
     const shareUrl = "https://sehrinefendileri.github.io/sehrin-efendileri-oyuncu-karti/?nick=" + encodeURIComponent(nickEl.innerText);
     navigator.clipboard.writeText(shareUrl).then(() => {
         alert("Discord paylaşım linki kopyalandı!");
