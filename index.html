@@ -71,10 +71,11 @@ h1 { color: rgba(250, 204, 21, 0.6); margin: 15px 0; text-transform: uppercase; 
 
 /* AKSİYON ALANI */
 .challenge-text { color: #facc15; font-size: 13px; font-weight: 800; margin: 15px 0; font-style: italic; }
-.action-buttons { display: flex; gap: 12px; width: 360px; }
-.download-btn { flex: 1.5; background: #38bdf8; color: #fff; padding: 15px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; }
-.share-btn { flex: 1; background: #22c55e; color: #fff; padding: 15px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; }
-.download-btn:hover, .share-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+.action-buttons { display: flex; flex-direction: column; gap: 10px; width: 360px; }
+.download-btn { background: #38bdf8; color: #fff; padding: 15px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 100%; font-size: 14px; }
+.share-btn { background: #5865F2; color: #fff; padding: 15px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 100%; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.insta-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #fff; padding: 15px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 100%; font-size: 14px; }
+.download-btn:hover, .share-btn:hover, .insta-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
 </style>
 </head>
 
@@ -104,10 +105,12 @@ h1 { color: rgba(250, 204, 21, 0.6); margin: 15px 0; text-transform: uppercase; 
             <div class="stat-row"><b>HS ORANI</b> <span id="card-hs">%0</span></div>
             <div class="stat-row"><b>TOPLAM HASAR</b> <span id="card-dmg">0</span></div>
         </div>
+        
         <div class="challenge-text">"Beni geçebilecek var mı? Paylaş ve meydan oku!"</div>
+        
         <div class="action-buttons">
-            <button class="download-btn" onclick="downloadCard()">KARTI KAYDET</button>
-            <button class="share-btn" onclick="copyShareLink()">LİNKİ PAYLAŞ</button>
+            <button class="download-btn" onclick="downloadCard()">KARTI KAYDET (INSTAGRAM İÇİN)</button>
+            <button class="share-btn" onclick="copyShareLink()">DISCORD'DA PAYLAŞ (LİNK)</button>
         </div>
     </div>
 </div>
@@ -174,7 +177,6 @@ async function fetchPlayerStats(overrideNick = null){
         const rankEl = document.getElementById('card-rank');
         const bragEl = document.getElementById('card-brag');
 
-        // GÜNCEL RÜTBE VE TANIMLAR
         if(kdVal >= 2.5) { 
             rankEl.innerText = "EFSANE"; bragEl.innerText = "Oyuna yön veriyor."; card.classList.add('theme-efsane'); 
         } else if(kdVal >= 1.8) { 
@@ -185,7 +187,6 @@ async function fetchPlayerStats(overrideNick = null){
             rankEl.innerText = "ACEMİ"; bragEl.innerText = "Başlangıç seviyesinde."; card.classList.add('theme-acemi'); 
         }
 
-        // GÜNCEL ROZET MANTIĞI (SAVAŞÇI)
         let badges = [];
         if((p.hs_percent||0) >= 35) badges.push("HS MAKİNESİ");
         if(kdVal >= 2.0) badges.push("DURDURULAMAZ");
@@ -196,8 +197,8 @@ async function fetchPlayerStats(overrideNick = null){
 
         setTimeout(() => {
             animateValue(document.getElementById('card-kd'), 0, kdVal, 1000, true);
-            animateValue(document.getElementById('card-kills'), 0, kills, 1000);
-            animateValue(document.getElementById('card-deaths'), 0, deaths, 1000);
+            animateValue(document.getElementById('card-kills'), 0, Number(p.total_kills), 1000);
+            animateValue(document.getElementById('card-deaths'), 0, Number(p.total_deaths), 1000);
             animateValue(document.getElementById('card-dmg'), 0, Number(p.total_damage||0), 1000);
             document.getElementById('card-hs').innerText = "%" + (p.hs_percent || 0);
         }, 100);
@@ -214,7 +215,7 @@ function copyShareLink() {
     }
     const shareUrl = window.location.origin + window.location.pathname + "?nick=" + encodeURIComponent(nickEl.innerText);
     navigator.clipboard.writeText(shareUrl).then(() => {
-        alert("Link kopyalandı! Arkadaşlarına meydan oku.");
+        alert("Discord paylaşım linki kopyalandı!");
     });
 }
 
