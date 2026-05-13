@@ -172,13 +172,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function animateValue(obj, start, end, duration, isFloat = false) {
+function animateValue(obj, start, end, duration, isFloat = false, isPercent = false) {
     let startTimestamp = null;
     const step = (timestamp) => {
         if (!startTimestamp) startTimestamp = timestamp;
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
         let val = progress * (end - start) + start;
-        obj.innerHTML = isFloat ? val.toFixed(2) : Math.floor(val).toLocaleString();
+        let finalVal = isFloat ? val.toFixed(2) : Math.floor(val).toLocaleString();
+        obj.innerHTML = isPercent ? "%" + Math.floor(val) : finalVal;
         if (progress < 1) window.requestAnimationFrame(step);
     };
     window.requestAnimationFrame(step);
@@ -240,7 +241,7 @@ async function fetchPlayerStats(overrideNick = null){
             animateValue(document.getElementById('card-kills'), 0, Number(p.total_kills), 1000);
             animateValue(document.getElementById('card-deaths'), 0, Number(p.total_deaths), 1000);
             animateValue(document.getElementById('card-dmg'), 0, Number(p.total_damage||0), 1000);
-            document.getElementById('card-hs').innerText = "%" + (p.hs_percent || 0);
+            animateValue(document.getElementById('card-hs'), 0, Number(p.hs_percent || 0), 1000, false, true);
         }, 100);
 
     } catch(err) { console.log(err); }
